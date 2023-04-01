@@ -11,6 +11,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
 
@@ -61,16 +64,17 @@ public class RegisterMailChimpStepdefs {
         WebElement pwd = driver.findElement(By.name("password"));
         pwd.sendKeys(password);
         Thread.sleep(1000);
+
     }
 
     @When("I click the Sign Up button")
     public void iClickTheSignUpButton() throws InterruptedException {
-        Thread.sleep(2000);
-        WebElement button = driver.findElement(By.cssSelector("#create-account"));
-        System.out.println("TEST!!!");
+
+        WebElement button = driver.findElement(By.id("create-account-enabled"));
         Thread.sleep(2000);
         button.click();
-        System.out.println("CLICK!!!");
+        Actions actions = new Actions(driver);
+        actions.moveToElement(button).click().perform();
         Thread.sleep(2000);
 
     }
