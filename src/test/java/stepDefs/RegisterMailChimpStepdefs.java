@@ -15,6 +15,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.Assert.assertEquals;
 
 public class RegisterMailChimpStepdefs {
@@ -53,13 +56,25 @@ public class RegisterMailChimpStepdefs {
 
     @Given("I have entered my {string} and my {string} and my {string}")
     public void iHaveEnteredMyAndMyAndMy(String email, String username, String password) throws InterruptedException {
+
+        // Get current date and time
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // Format date and time as a string
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String dateTimeString = currentDateTime.format(formatter);
+
+        // Use the formatted date and time as a username
+        String usernameTime = "user_" + dateTimeString;
+        //System.out.println("Username: " + username);
+
         WebElement mail = driver.findElement(By.name("email"));
         mail.sendKeys(email);
         Thread.sleep(1000);
         WebElement user = driver.findElement(By.name("username"));
         user.sendKeys("");
         user.clear();
-        user.sendKeys("admin" + username);
+        user.sendKeys("admin" + username + dateTimeString);
         Thread.sleep(1000);
         WebElement pwd = driver.findElement(By.name("password"));
         pwd.sendKeys(password);
