@@ -12,8 +12,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 public class RegisterMailChimpStepdefs {
     private WebDriver driver;
+    private WebDriver wait;
 
     @Before
     public void SetUp() {
@@ -74,7 +73,7 @@ public class RegisterMailChimpStepdefs {
         WebElement user = driver.findElement(By.name("username"));
         user.sendKeys("");
         user.clear();
-        user.sendKeys("admin" + username + dateTimeString);
+        user.sendKeys(username + dateTimeString);
         Thread.sleep(1000);
         WebElement pwd = driver.findElement(By.name("password"));
         pwd.sendKeys(password);
@@ -87,27 +86,39 @@ public class RegisterMailChimpStepdefs {
 
         WebElement button = driver.findElement(By.id("create-account-enabled"));
         Thread.sleep(2000);
-        button.click();
+        //button.click();
         Actions actions = new Actions(driver);
         actions.moveToElement(button).click().perform();
-        Thread.sleep(2000);
+        Thread.sleep(20000);
 
     }
 
     @Then("I have {string} to register")
     public void iHaveToRegister(String succeeded) throws InterruptedException {
-       if (succeeded.equalsIgnoreCase("yes")) {
+        if (succeeded.equalsIgnoreCase("yes")) {
 
-            String expectedTitle = "Success | Mailchimp";
-            String actualTitle = driver.getTitle();
-            assertEquals(expectedTitle, actualTitle);
+            String expected = "Success | Mailchimp";
+            String actual = driver.getTitle();
+            assertEquals(expected, actual);
 
-        }else if (succeeded.equalsIgnoreCase("no")) {
+        } else if (succeeded.equalsIgnoreCase("no, long Username")) {
 
-            WebElement errorMsg = driver.findElement(By.cssSelector(".padding--lv3 > li"));
-            String actualText = errorMsg.getText();
-           String expectedTitle = "Please check your entry and try again.";
-          assertEquals(expectedTitle, actualText);
+            WebElement errorMsg = driver.findElement(By.cssSelector(".invalid-error"));
+            String actual = errorMsg.getText();
+            String expected = "Enter a value less than 100 characters long";
+            assertEquals(expected, actual);
+        } else if (succeeded.equalsIgnoreCase("no, Username taken")) {
+
+            WebElement errorMsg = driver.findElement(By.cssSelector(".invalid-error"));
+            String actual = errorMsg.getText();
+            String expected = "Great minds think alike - someone already has this username.";
+            assertEquals(true, actual.contains(expected));
+        } else if (succeeded.equalsIgnoreCase("no, no email")) {
+
+            WebElement errorMsg = driver.findElement(By.cssSelector(".invalid-error"));
+            String actual = errorMsg.getText();
+            String expected = "An email address must contain a single @.";
+            assertEquals(expected, actual);
         }
     }
 }

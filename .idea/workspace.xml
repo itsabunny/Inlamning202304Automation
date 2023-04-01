@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a76ad303-115f-4028-ad9e-1866224db88d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/stepDefs/RegisterMailChimpStepdefs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/stepDefs/RegisterMailChimpStepdefs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/RegisterMailChimp.feature" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/RegisterMailChimp.feature" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -7,15 +7,15 @@ Feature: Mailchimp Sign Up
     Then I have "<succeeded>" to register
 
     Examples:
-      | browser | email           | username                                                                                                  | password | succeeded |
-      | brave   | brave@test1.now | first                                                                                                     | lowUP1$! | yes       |
-      | edge    | edge@test1.now  | first                                                                                                     | lowUP1$! | yes       |
-      | brave   | brave@test2.now | brave1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 | lowUP1$! | no        |
-      | edge    | edge@test2.now  | edge1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890  | lowUP1$! | no        |
-      | brave   | brave@test3.now |                                                                                                           | lowUP1$! | no        |
-      | edge    | edge@test3.now  |                                                                                                           | lowUP1$! | no        |
-      | brave   |                 | fourth                                                                                                    | lowUP1$! | no        |
-      | edge    |                 | fourth                                                                                                    | lowUP1$! | no        |
+      | browser | email           | username                                                                                                  | password | succeeded          |
+      | brave   | brave@test1.now | first                                                                                                     | lowUP1$! | yes                |
+      | edge    | edge@test1.now  | first                                                                                                     | lowUP1$! | yes                |
+      | brave   | brave@test2.now | brave1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 | lowUP1$! | no, long Username  |
+      | edge    | edge@test2.now  | edge1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890  | lowUP1$! | no, long Username  |
+      | brave   | brave@test3.now | kaninis                                                                                                   | lowUP1$! | no, Username taken |
+      | edge    | edge@test3.now  | kaninis                                                                                                   | lowUP1$! | no, Username taken |
+      | brave   |                 | fourth                                                                                                    | lowUP1$! | no, no email       |
+      | edge    |                 | fourth                                                                                                    | lowUP1$! | no, no email       |
 
   # <browser> defines which browser is used
   # <emailadress>
