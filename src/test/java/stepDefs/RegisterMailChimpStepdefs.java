@@ -14,52 +14,47 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import static org.junit.Assert.assertEquals;
-
 public class RegisterMailChimpStepdefs {
     private WebDriver driver;
     private WebDriverWait wait;
-
     @Before
     public void SetUp() {
     }
-
     @After
     public void TearDown() {
         driver.close();
         driver.quit();
     }
-
-    @Given("I have opened my {string} and I'm on the MailChimp sign up page")
-    public void iHaveOpenedMyAndIMOnTheMailChimpSignUpPage(String browser) throws InterruptedException {
-        if (browser.equalsIgnoreCase("brave")) {
-            System.setProperty("webdriver.chrome.driver", "G:\\Selenium\\chromedriver_win32\\chromedriver.exe");
-            ChromeOptions options = new ChromeOptions();
-            options.setBinary("C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe");
-            options.addArguments("--remote-allow-origins=*", "ignore-certificate-errors");
-            driver = new ChromeDriver(options);
-            driver.manage().window().maximize();
-            driver.get("https://login.mailchimp.com/signup/");
-            wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        } else if (browser.equalsIgnoreCase("edge")) {
-            driver = new EdgeDriver();
-            driver.manage().window().maximize();
-            driver.get("https://login.mailchimp.com/signup/");
-            wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+    public class WebDriverFactory {
+        public static WebDriver createWebDriver(String browser) {
+            if (browser.equalsIgnoreCase("brave")) {
+                System.setProperty("webdriver.chrome.driver", "G:\\Selenium\\chromedriver_win32\\chromedriver.exe");
+                ChromeOptions options = new ChromeOptions();
+                options.setBinary("C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe");
+                options.addArguments("--remote-allow-origins=*", "ignore-certificate-errors");
+                return new ChromeDriver(options);
+            } else if (browser.equalsIgnoreCase("edge")) {
+                return new EdgeDriver();
+            } else {
+                throw new IllegalArgumentException("Invalid browser type: " + browser);
+            }
         }
     }
-
+    @Given("I have opened my {string} and I'm on the MailChimp sign up page")
+    public void iHaveOpenedMyAndIMOnTheMailChimpSignUpPage(String browser) {
+        driver = WebDriverFactory.createWebDriver(browser);
+        driver.manage().window().maximize();
+        driver.get("https://login.mailchimp.com/signup/");
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+    }
     @Given("I have entered my {string} and my {string} and my {string}")
-    public void iHaveEnteredMyAndMyAndMy(String email, String username, String password) throws InterruptedException {
-        // Get current date and time
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        // Format date and time as a string
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    public void iHaveEnteredMyAndMyAndMy(String email, String username, String password) {
+        LocalDateTime currentDateTime = LocalDateTime.now();  // Get current date and time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");  // Format date and time as a string
         String dateTimeString = currentDateTime.format(formatter);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.name("email")));
         WebElement mail = driver.findElement(By.name("email"));
@@ -78,29 +73,25 @@ public class RegisterMailChimpStepdefs {
             user.sendKeys(username + dateTimeString);
         }
     }
-
     @When("I click the Sign Up button")
-    public void iClickTheSignUpButton() throws InterruptedException {
+    public void iClickTheSignUpButton() {
         WebElement button = driver.findElement(By.id("create-account-enabled"));
         Actions actions = new Actions(driver);
         actions.moveToElement(button).perform();
         button.click();
     }
-
     private String waitForError() {
         WebElement errorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".invalid-error")));
         String actual = errorMsg.getText();
         return actual;
     }
-
     @Then("I have {string} to register")
-    public void iHaveToRegister(String succeeded) throws InterruptedException {
+    public void iHaveToRegister(String succeeded) {
         if (succeeded.equalsIgnoreCase("yes")) {
             wait.until(ExpectedConditions.titleIs("Success | Mailchimp"));
             String expected = "Success | Mailchimp";
             String actual = driver.getTitle();
             assertEquals(expected, actual);
-
         } else if (succeeded.equalsIgnoreCase("no, long Username")) {
             String actual = waitForError();
             String expected = "Enter a value less than 100 characters long";
